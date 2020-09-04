@@ -1,0 +1,26 @@
+﻿<Properties StartupConfiguration="{50017606-2427-4CF6-A2C3-BEDA66402A85}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Scorpion_MDB/Scorpion_MONGO.cs">
+    <Files>
+      <File FileName="Scorpion_MDB/Program.cs" Line="55" Column="15" />
+      <File FileName="Scorpion_MDB/Scorpion_MONGO.cs" Line="29" Column="10" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Scorpion_MDB" expanded="True">
+            <Node name="Scorpion_MDB" expanded="True">
+              <Node name="Scorpion_MONGO.cs" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.Scorpion__MDB PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

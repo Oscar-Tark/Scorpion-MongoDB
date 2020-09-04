@@ -13,7 +13,7 @@ namespace Scorpion_MDB
     public class Scorpion
     {
         Scorpion_TCP tcp;
-        static Scorpion_MONGO scmdb = new Scorpion_MONGO();
+        static Scorpion_MONGO scmdb;
 
         public Scorpion()
         {
@@ -25,23 +25,17 @@ namespace Scorpion_MDB
                 tcp = new Scorpion_TCP(Convert.ToInt32(Console.ReadLine()), this);
             }
             catch(Exception erty) { write_error("Unable to establish a network server due to: " + erty.Message); }
-            //scmdb = new Scorpion_MONGO();
-            //scmdb.mongodbfind();
+            scmdb = new Scorpion_MONGO(this);
             while (true)
                 execute_command(Console.ReadLine());
         }
 
         public void execute_command(string command)
         {
-            //mongo::function::mongocommand
+            //function::mongocommand
             Console.ForegroundColor = ConsoleColor.White;
-            if (command == "exit")
-                Console.WriteLine("Server is running: {0}", tcp.stop_server());
-            else if (command.StartsWith("mongo::", StringComparison.CurrentCulture))
-            {
-                string[] command_vars = split_command(ref command);
-                scmdb.do_mongo(ref command_vars);
-            }
+            string[] command_vars = split_command(ref command);
+            scmdb.do_mongo(ref command_vars);
         }
 
         static string[] unwanted = { "::", "*" };
@@ -50,7 +44,7 @@ namespace Scorpion_MDB
             return command.Replace("\n", "").Replace(" ", "").Replace(",", "").Split(unwanted, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        private void write_cui(string STR_)
+        public void write_cui(string STR_)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("{0}", STR_);
@@ -58,7 +52,7 @@ namespace Scorpion_MDB
             return;
         }
 
-        private void write_error(string STR_)
+        public void write_error(string STR_)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("{0}", STR_);
