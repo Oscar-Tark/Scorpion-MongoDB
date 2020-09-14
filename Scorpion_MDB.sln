@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scorpion_MDB", "Scorpion_MDB\Scorpion_MDB.csproj", "{50017606-2427-4CF6-A2C3-BEDA66402A85}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scorpion_Harvester", "Scorpion_MDB\Scorpion_Harvester.csproj", "{50017606-2427-4CF6-A2C3-BEDA66402A85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

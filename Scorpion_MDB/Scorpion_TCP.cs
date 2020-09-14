@@ -10,14 +10,33 @@ namespace Scorpion_MDB
         SimpleTcpClient tcp_cl = new SimpleTcpClient();
         Scorpion do_on;
 
-        public Scorpion_TCP(int port, Scorpion fm1)
+        public Scorpion_TCP(string url, int port, Scorpion fm1)
         {
             //Alaways uses non localhost IP
             do_on = fm1;
-            Console.WriteLine("Server is running: {0}", start_server(ref port));
+            Console.WriteLine("Connected: {0} on {1}:{2}", start_client(ref url, ref port), url, port);
             return;
         }
 
+        public bool start_client(ref string url, ref int port)
+        {
+            tcp_cl.Connect(url, port);
+            tcp_cl.DataReceived += Tcp_Cl_DataReceived;
+            return tcp_cl.TcpClient.Connected;
+        }
+
+        void Tcp_Cl_DataReceived(object sender, Message e)
+        {
+            IPEndPoint ipep = (IPEndPoint)e.TcpClient.Client.RemoteEndPoint;
+            IPAddress ipa = ipep.Address;
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine("Got string: {0} from {1}", e.MessageString, ipa);
+            do_on.execute_command(e.MessageString);
+            return;
+        }
+
+
+        //Depreciated. Only a client will be used now
         public bool start_server(ref int port)
         {
             tcp.Start(port, false);

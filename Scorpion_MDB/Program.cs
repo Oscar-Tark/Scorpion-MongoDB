@@ -19,10 +19,10 @@ namespace Scorpion_MDB
         {
             //Start TCP
             write_cui("Scorpion MONGODB hub v0.1b 2020+ <Oscar Arjun Singh Tark>");
-            write_cui("Please enter a valid TCP port to bind to:");
+            write_cui("Please enter a valid URL and PORT to bind to:");
             try
             {
-                tcp = new Scorpion_TCP(Convert.ToInt32(Console.ReadLine()), this);
+                tcp = new Scorpion_TCP(Console.ReadLine(), Convert.ToInt32(Console.ReadLine()), this);
             }
             catch(Exception erty) { write_error("Unable to establish a network server due to: " + erty.Message); }
             scmdb = new Scorpion_MONGO(this);
@@ -42,6 +42,14 @@ namespace Scorpion_MDB
         public static string[] split_command(ref string command)
         {
             return command.Replace("\n", "").Replace(" ", "").Replace(",", "").Split(unwanted, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public void write_success(string STR_)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("{0}", STR_);
+            Console.ForegroundColor = ConsoleColor.White;
+            return;
         }
 
         public void write_cui(string STR_)

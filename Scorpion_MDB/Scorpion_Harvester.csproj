@@ -81,12 +81,27 @@
     <Reference Include="MongoDB.Driver">
       <HintPath>..\packages\MongoDB.Driver.2.11.1\lib\net452\MongoDB.Driver.dll</HintPath>
     </Reference>
+    <Reference Include="System.Json" />
+    <Reference Include="Flurl">
+      <HintPath>..\packages\Flurl.2.8.2\lib\net40\Flurl.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Flurl.Http">
+      <HintPath>..\packages\Flurl.Http.2.4.2\lib\net46\Flurl.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>..\packages\RestSharp.106.11.4\lib\net452\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scorpion_TCP.cs" />
     <Compile Include="Scorpion_MONGO.cs" />
+    <Compile Include="Scorpion_JSON.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

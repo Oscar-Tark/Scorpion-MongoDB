@@ -1,60 +1,222 @@
 ﻿using System;
-using MongoDB;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Libmongocrypt;
+using MongoDB.Bson.Serialization;
+using System.Threading;
 
 namespace Scorpion_MDB
 {
     public class Scorpion_MONGO
     {
-        Scorpion Do_on;
-        struct Mongo_settings
-        { 
-            
-        };
+        Scorpion Do_on; private Retrievalengine re__;
+        private Retrievalengine[] re_instance;
+        private string[] re_ref;
+
+        const int max_instances = 10;
+        int instance_count = 0;
 
         public Scorpion_MONGO(Scorpion fm1)
         {
             Do_on = fm1;
+
+            //Maximum supported instances is 10
+            re_instance = new Retrievalengine[max_instances];
+            re_ref = new string[max_instances];
+
+            Do_on.write_cui("Use the start function in order to start the retrieval function:\n\nstart::*URL *interval *db *collection\n***************************************************\n\n");
             return;
         }
 
         public void do_mongo(ref string[] command)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(">>> Executing: {0}", command[0]);
-            this.GetType().GetMethod(command[0], System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).Invoke(this, new object[] { command });
+            try
+            {
+                this.GetType().GetMethod(command[0], System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).Invoke(this, new object[] { command });
+                Do_on.write_success(">> Executed: " + command[0]);
+            }
+            catch(Exception erty) { Do_on.write_error(erty.Message); }
             return;
         }
 
+        //Contains basic functions in order to control the RETRIEVAL ENGINE
+        /*
+        Retrieval engine retrieves data from a specific service that supports JSON
+        */
+        public void start(ref string[] command)
+        {
+            //::*URL *interval, *db, *collection, *instance_name
+            int this_instance = 0;
+            try
+            {
+                if (instance_count == max_instances)
+                    return;
+
+                this_instance = instance_count++;
+                re_instance[this_instance] = new Retrievalengine();
+                re_instance[this_instance].__start(command[1], Convert.ToInt32(command[2]), command[3], command[4], ref this_instance);
+                re_ref[this_instance] = command[5];
+            }
+            catch(Exception e) { Console.WriteLine(e.Message); }
+            return;
+        }
+
+        public void stop(ref string[] command)
+        {
+            //::*name
+            for(int i = 0; i < max_instances; i++)
+            {
+                if (re_ref[i] == command[1])
+                {
+                    if (re_instance[i].__stop())
+                    {
+                        re_ref[i] = null;
+                        re_instance[i].Dispose(true);
+                        re_instance[i] = null;
+                    }
+                }
+            }
+            re__.__stop();
+        }
+    }
+
+    class Retrievalengine
+    {
+        settings se; Thread th_eng; Thread th_monitor; Scorpion_JSON json; MONGODB mongodb;
+        private struct settings
+        {
+            public int interval; //Interval in seconds
+            public string URL; //Always ending with /
+            public string db;
+            public string collection;
+            public int instance_index;
+        };
+
+        public void Dispose(bool v)
+        {
+            // Dispose of unmanaged resources.
+            Dispose(true);
+            // Suppress finalization.
+            GC.SuppressFinalize(this);
+            GC.Collect();
+            return;
+        }
+
+        public void __start(string URL, int interval, string db, string collection, ref int instance_index)
+        {
+            Console.WriteLine("Building new instance [Instance: " + instance_index + "]");
+            Console.WriteLine("Building settings...");
+
+            se = new settings();
+            se.instance_index = instance_index;
+            se.URL = URL;
+            se.db = db;
+            se.interval = interval;
+            se.collection = collection;
+
+            json = new Scorpion_JSON();
+            mongodb = new MONGODB();
+
+            Console.WriteLine("Starting main thread...");
+            ThreadStart ths_eng = new ThreadStart(ENG);
+            th_eng = new Thread(ths_eng);
+            th_eng.Priority = ThreadPriority.AboveNormal;
+            th_eng.Start();
+            Console.WriteLine("Main thread started...");
+            //Set up timer call back for monitor to check thread state
+            ThreadStart ths_mon = new ThreadStart(__monitor);
+            Thread th_mon = new Thread(__monitor);
+            th_mon.IsBackground = true;
+            th_mon.Priority = ThreadPriority.BelowNormal;
+            th_mon.Start();
+            Console.WriteLine("Main thread monitor started...");
+            return;
+        }
+
+        public bool __stop()
+        {
+            th_eng.Abort();
+            th_monitor.Abort();
+
+            if(th_eng.ThreadState == ThreadState.Aborted && th_monitor.ThreadState == ThreadState.Aborted)
+                return true;
+            return false;
+        }
+
+        //Monitoring functions
+        private void __monitor()
+        {
+            Timer tm_monitor = new Timer(monitor);
+            tm_monitor.Change(0, 2000);
+        }
+
+        private void monitor(object state)
+        {
+            //Thread monitor
+            return;
+        }
+
+        //Retrieval functions
+        private void ENG()
+        {
+            Timer tms = new Timer(get_data);
+            tms.Change(0, se.interval * 1000);
+
+            return;
+        }
+
+        private void get_data(object state)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Collecting data from [" + se.URL + "]");
+            string JSON = json.JSON_get(se.URL);
+
+            //Do Mongo
+            mongodb.setfromJSON(ref se.db, ref se.collection, ref JSON);
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Success >>> Collecting data from [" + se.URL + "]; instance[" + se.instance_index + "]");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            return;
+        }
+    }
+
+    class MONGODB
+    {
         //MONGO DB
-        public void mongodbsetone(ref string[] command)
+        public void setfromJSON(ref string database, ref string collect, ref string JSON)
         {
-            //*database, *collection, *value
-            Console.WriteLine(command[0]);
-            Console.WriteLine(command[1]);
-            Console.WriteLine(command[2]);
-            Console.WriteLine(command[3]);
-
+            //*database, *collection, *ref, *value, *ref, *value
+            //How to add values:
+            /*
+            *ref, *val, *ref, *val
+            */
             var client = new MongoClient();
-            var db = client.GetDatabase(command[1]);
-            var collection = db.GetCollection<BsonDocument>(command[2]);
-            var document = new BsonDocument { { "user", "f" } };
+            var db = client.GetDatabase(database);
+            var collection = db.GetCollection<BsonDocument>(collect);
+            var BsonArray = BsonSerializer.Deserialize<BsonArray>(JSON);
+            var document = new BsonDocument();
 
-            collection.InsertOne(document);
+            Console.ForegroundColor = ConsoleColor.Red;
+            var JSON__ = BsonArray.ToJson();
+            Console.WriteLine(JSON__);
+            document.Add("Scorpion_Data", BsonArray);
+            collection.InsertOneAsync(document);
 
+            Console.WriteLine("Successfully inserted retrieved JSON into " + database + "." + collection);
             return;
         }
 
-        public void mongodbfind(ref string[] command)
+        public void find(ref string[] command)
         {
-            //*database, *collection, *value
+            //*database, *collection, *filter, *limit
             var client = new MongoClient();
+            Console.WriteLine(command[1]);
             var db = client.GetDatabase(command[1]);
             var collection = db.GetCollection<BsonDocument>(command[2]);
-            var filter = Builders<BsonDocument>.Filter.Eq("", 10);
+            var filter = Builders<BsonDocument>.Filter.Eq("a", 10);
             var document = collection.Find(filter).FirstOrDefault();
+
+
             System.Console.WriteLine(document.ToString());
 
             return;
@@ -66,9 +228,9 @@ namespace Scorpion_MDB
             MongoClient dbClient = new MongoClient();
             var dbList = dbClient.ListDatabases().ToList();
 
-            Do_on.write_cui("The list of databases on this server is: ");
+            Console.WriteLine("The list of databases on this server is: ");
             foreach (var db in dbList)
-                Do_on.write_cui(db.ToJson());
+                Console.WriteLine(db.ToJson());
 
             return;
         }

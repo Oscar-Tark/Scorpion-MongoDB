@@ -1,14 +1,16 @@
 ﻿<Properties StartupConfiguration="{50017606-2427-4CF6-A2C3-BEDA66402A85}|Default">
   <MonoDevelop.Ide.Workbench ActiveDocument="Scorpion_MDB/Scorpion_MONGO.cs">
     <Files>
-      <File FileName="Scorpion_MDB/Program.cs" Line="55" Column="15" />
-      <File FileName="Scorpion_MDB/Scorpion_MONGO.cs" Line="29" Column="10" />
+      <File FileName="Scorpion_MDB/Scorpion_JSON.cs" Line="53" Column="89" />
+      <File FileName="Scorpion_MDB/Scorpion_MONGO.cs" Line="203" Column="41" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="Scorpion_MDB" expanded="True">
-            <Node name="Scorpion_MDB" expanded="True">
+            <Node name="Scorpion_Harvester" expanded="True">
+              <Node name="Core" expanded="True" />
+              <Node name="Properties" expanded="True" />
               <Node name="Scorpion_MONGO.cs" selected="True" />
             </Node>
           </Node>
@@ -16,9 +18,9 @@
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.ItemProperties.Scorpion__MDB PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.ItemProperties.Scorpion__Harvester PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

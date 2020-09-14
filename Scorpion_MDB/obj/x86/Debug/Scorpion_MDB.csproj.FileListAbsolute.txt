@@ -230,3 +230,11 @@
 /home/ferret/GIT/Scorpion-MongoDB/Scorpion_MDB/obj/x86/Debug/Scorpion_MDB.csproj.CopyComplete
 /home/ferret/GIT/Scorpion-MongoDB/Scorpion_MDB/obj/x86/Debug/Scorpion_MDB.exe
 /home/ferret/GIT/Scorpion-MongoDB/Scorpion_MDB/obj/x86/Debug/Scorpion_MDB.pdb
+/home/ferret/GIT/Scorpion-MongoDB/Scorpion_MDB/bin/Debug/Flurl.dll
+/home/ferret/GIT/Scorpion-MongoDB/Scorpion_MDB/bin/Debug/Flurl.Http.dll
+/home/ferret/GIT/Scorpion-MongoDB/Scorpion_MDB/bin/Debug/Newtonsoft.Json.dll
+/home/ferret/GIT/Scorpion-MongoDB/Scorpion_MDB/bin/Debug/RestSharp.dll
+/home/ferret/GIT/Scorpion-MongoDB/Scorpion_MDB/bin/Debug/Flurl.xml
+/home/ferret/GIT/Scorpion-MongoDB/Scorpion_MDB/bin/Debug/Newtonsoft.Json.xml
+/home/ferret/GIT/Scorpion-MongoDB/Scorpion_MDB/bin/Debug/Flurl.Http.xml
+/home/ferret/GIT/Scorpion-MongoDB/Scorpion_MDB/bin/Debug/RestSharp.xml
