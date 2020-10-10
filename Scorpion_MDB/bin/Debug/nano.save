@@ -1,0 +1,4 @@
+start::*http://localhost/dbanalytica/all_dat.php *50 *test4 *post
+
+
+start::*localhost/dbanalytica/all_dat.php *50 *test4 *post
