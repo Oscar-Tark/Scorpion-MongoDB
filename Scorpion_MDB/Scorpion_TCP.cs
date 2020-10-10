@@ -21,8 +21,15 @@ namespace Scorpion_MDB
         public bool start_client(ref string url, ref int port)
         {
             tcp_cl.Connect(url, port);
+            tcp_cl.Delimiter = 0x13;
             tcp_cl.DataReceived += Tcp_Cl_DataReceived;
             return tcp_cl.TcpClient.Connected;
+        }
+
+        public void client_broadcast(string message)
+        {
+            tcp_cl.WriteLine("output::{&var}{&quot}" + message + "{&quot}");
+            return;
         }
 
         void Tcp_Cl_DataReceived(object sender, Message e)
@@ -30,21 +37,21 @@ namespace Scorpion_MDB
             IPEndPoint ipep = (IPEndPoint)e.TcpClient.Client.RemoteEndPoint;
             IPAddress ipa = ipep.Address;
             Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("Got string: {0} from {1}", e.MessageString, ipa);
-            do_on.execute_command(e.MessageString);
+            EngineFunctions ef__ = new EngineFunctions();
+            string command = ef__.replace_fakes(ef__.replace_telnet(e.MessageString));
+            Console.WriteLine("[NETWORK:{1}] {0}", command.TrimEnd(new char[] { Convert.ToChar(0x13) }), ipa);
+            do_on.execute_command(command.TrimEnd(new char[] { Convert.ToChar(0x13) }));
             return;
         }
 
-
         //Depreciated. Only a client will be used now
-        public bool start_server(ref int port)
+        /*public bool start_server(ref int port)
         {
             tcp.Start(port, false);
             tcp.ClientConnected += Tcp_ClientConnected;
             tcp.DataReceived += Tcp_DataReceived;
             return tcp.IsStarted;
         }
-
 
         public bool stop_server()
         {
@@ -66,6 +73,6 @@ namespace Scorpion_MDB
             Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("Got string: {0} from {1}", e.MessageString, ipa);
             do_on.execute_command(e.MessageString);
-        }
+        }*/
     }
 }

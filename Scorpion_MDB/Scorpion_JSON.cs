@@ -26,10 +26,10 @@ namespace Scorpion_MDB
             return ts.Result;
         }
 
-        public string JSON_post_auth(string URL, string AUTH)
+        public string JSON_post_auth(string URL, string AUTH, string TOKEN, string DATE)
         {
             Console.WriteLine("auth JSON: " + URL);
-            Task<string> ts = JSON_postAsync_auth(URL, AUTH);
+            Task<string> ts = JSON_postAsync_auth(URL, AUTH, TOKEN, DATE);
             ts.Wait();
             Console.WriteLine("Done auth JSON: " + URL);
             return ts.Result;
@@ -37,12 +37,16 @@ namespace Scorpion_MDB
 
         private async Task<string> JSON_getAsync(string URL)
         {
-            var client = new RestClient(URL);
-            //client.Authenticator = new HttpBasicAuthenticator("username", "password");
+            var response = "";
+            try
+            {
+                var client = new RestClient(URL);
+                //client.Authenticator = new HttpBasicAuthenticator("username", "password");
 
-            var request = new RestRequest("", DataFormat.None);
-            var response = await client.GetAsync<string>(request, CancellationToken.None);
-
+                var request = new RestRequest("", DataFormat.None);
+                response = await client.GetAsync<string>(request, CancellationToken.None);
+            }
+            catch { }
             return response;
         }
 
@@ -58,18 +62,19 @@ namespace Scorpion_MDB
             return response;
         }
 
-        private async Task<string> JSON_postAsync_auth(string URL, string AUTH)
+        private async Task<string> JSON_postAsync_auth(string URL, string USER, string TOKEN, string DATE)
         {
             var client = new RestClient(URL);
-            client.AddDefaultHeader("Content-Type", "application/json ");
-            client.AddDefaultHeader("Accept", "application/json ");
-            client.AddDefaultHeader("Authorization", "Bearer " + AUTH);
+            var request = new RestRequest("", Method.POST);
 
-            //client.Authenticator = new HttpBasicAuthenticator("username", "password");
+            request.AddParameter("Authorization", TOKEN);
+            request.AddParameter("User", USER);
+            request.AddParameter("Date", DATE);
+            request.AddParameter("Accept", "application/json ");
+            request.AddParameter("Content-Type", "application/x-www-form-urlencoded");
+            request.RequestFormat = DataFormat.Xml;
 
-            var request = new RestRequest("", DataFormat.Json).AddJsonBody("");
-            var response = await client.PostAsync<string>(request, CancellationToken.None);
-
+            string response = await client.PostAsync<string>(request, CancellationToken.None);
             return response;
         }
         //Convert

@@ -1,16 +1,15 @@
 ﻿<Properties StartupConfiguration="{50017606-2427-4CF6-A2C3-BEDA66402A85}|Default">
   <MonoDevelop.Ide.Workbench ActiveDocument="Scorpion_MDB/Scorpion_MONGO.cs">
     <Files>
-      <File FileName="Scorpion_MDB/Scorpion_JSON.cs" Line="53" Column="89" />
-      <File FileName="Scorpion_MDB/Scorpion_MONGO.cs" Line="203" Column="41" />
+      <File FileName="Scorpion_MDB/Scorpion_MONGO.cs" Line="57" Column="98" />
+      <File FileName="Scorpion_MDB/Program.cs" Line="88" Column="110" />
+      <File FileName="Scorpion_MDB/Scorpion_TCP.cs" Line="42" Column="64" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="Scorpion_MDB" expanded="True">
             <Node name="Scorpion_Harvester" expanded="True">
-              <Node name="Core" expanded="True" />
-              <Node name="Properties" expanded="True" />
               <Node name="Scorpion_MONGO.cs" selected="True" />
             </Node>
           </Node>

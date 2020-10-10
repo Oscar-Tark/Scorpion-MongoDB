@@ -121,3 +121,4 @@
 /home/ferret/GIT/Scorpion-MongoDB/Scorpion_MDB/obj/x86/Debug/Scorpion_Harvester.csproj.CopyComplete
 /home/ferret/GIT/Scorpion-MongoDB/Scorpion_MDB/obj/x86/Debug/Scorpion_MDB.exe
 /home/ferret/GIT/Scorpion-MongoDB/Scorpion_MDB/obj/x86/Debug/Scorpion_MDB.pdb
+/home/ferret/GIT/Scorpion-MongoDB/Scorpion_MDB/obj/x86/Debug/Scorpion_Harvester.csprojAssemblyReference.cache

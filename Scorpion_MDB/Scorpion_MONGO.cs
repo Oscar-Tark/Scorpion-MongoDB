@@ -23,7 +23,7 @@ namespace Scorpion_MDB
             re_instance = new Retrievalengine[max_instances];
             re_ref = new string[max_instances];
 
-            Do_on.write_cui("Use the start function in order to start the retrieval function:\n\nstart::*URL *interval *db *collection\n***************************************************\n\n");
+            Do_on.write_cui("Use the start function in order to start the retrieval function:\n\nstart::*URL *remote_to_get_date *local_db *local_collection\n***************************************************\n\n");
             return;
         }
 
@@ -33,7 +33,7 @@ namespace Scorpion_MDB
             try
             {
                 this.GetType().GetMethod(command[0], System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).Invoke(this, new object[] { command });
-                Do_on.write_success(">> Executed: " + command[0]);
+                Do_on.write_success("Executed >> " + command[0]);
             }
             catch(Exception erty) { Do_on.write_error(erty.Message); }
             return;
@@ -51,10 +51,10 @@ namespace Scorpion_MDB
             {
                 if (instance_count == max_instances)
                     return;
-
                 this_instance = instance_count++;
                 re_instance[this_instance] = new Retrievalengine();
-                re_instance[this_instance].__start(command[1], Convert.ToInt32(command[2]), command[3], command[4], ref this_instance);
+                Console.WriteLine("{0}, {1}, {2}, {3}", command[1], command[2], command[3], command[4]);
+                re_instance[this_instance].__start(command[1], command[2], command[3], command[4], ref this_instance);
                 re_ref[this_instance] = command[5];
             }
             catch(Exception e) { Console.WriteLine(e.Message); }
@@ -90,6 +90,7 @@ namespace Scorpion_MDB
             public string db;
             public string collection;
             public int instance_index;
+            public string date;
         };
 
         public void Dispose(bool v)
@@ -102,7 +103,7 @@ namespace Scorpion_MDB
             return;
         }
 
-        public void __start(string URL, int interval, string db, string collection, ref int instance_index)
+        public void __start(string URL, string date, string db, string collection, ref int instance_index)
         {
             Console.WriteLine("Building new instance [Instance: " + instance_index + "]");
             Console.WriteLine("Building settings...");
@@ -111,25 +112,18 @@ namespace Scorpion_MDB
             se.instance_index = instance_index;
             se.URL = URL;
             se.db = db;
-            se.interval = interval;
+            se.date = date;
             se.collection = collection;
 
             json = new Scorpion_JSON();
             mongodb = new MONGODB();
-
+            
             Console.WriteLine("Starting main thread...");
             ThreadStart ths_eng = new ThreadStart(ENG);
             th_eng = new Thread(ths_eng);
             th_eng.Priority = ThreadPriority.AboveNormal;
             th_eng.Start();
             Console.WriteLine("Main thread started...");
-            //Set up timer call back for monitor to check thread state
-            ThreadStart ths_mon = new ThreadStart(__monitor);
-            Thread th_mon = new Thread(__monitor);
-            th_mon.IsBackground = true;
-            th_mon.Priority = ThreadPriority.BelowNormal;
-            th_mon.Start();
-            Console.WriteLine("Main thread monitor started...");
             return;
         }
 
@@ -143,25 +137,12 @@ namespace Scorpion_MDB
             return false;
         }
 
-        //Monitoring functions
-        private void __monitor()
-        {
-            Timer tm_monitor = new Timer(monitor);
-            tm_monitor.Change(0, 2000);
-        }
-
-        private void monitor(object state)
-        {
-            //Thread monitor
-            return;
-        }
-
         //Retrieval functions
         private void ENG()
         {
-            Timer tms = new Timer(get_data);
-            tms.Change(0, se.interval * 1000);
-
+            get_data(null);
+            //Timer tms = new Timer(get_data);
+            //tms.Change(0, se.interval * 1000);
             return;
         }
 
@@ -169,12 +150,12 @@ namespace Scorpion_MDB
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Collecting data from [" + se.URL + "]");
-            string JSON = json.JSON_get(se.URL);
+            string JSON = json.JSON_post_auth(se.URL, "admin", "1234", se.date);
 
             //Do Mongo
             mongodb.setfromJSON(ref se.db, ref se.collection, ref JSON);
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Success >>> Collecting data from [" + se.URL + "]; instance[" + se.instance_index + "]");
+            Console.WriteLine("Success >> Collecting data from [" + se.URL + "]; instance[" + se.instance_index + "]");
             Console.ForegroundColor = ConsoleColor.Yellow;
             return;
         }
@@ -196,12 +177,11 @@ namespace Scorpion_MDB
             var BsonArray = BsonSerializer.Deserialize<BsonArray>(JSON);
             var document = new BsonDocument();
 
-            Console.ForegroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.Green;
             var JSON__ = BsonArray.ToJson();
-            Console.WriteLine(JSON__);
+            Console.WriteLine("Got {0} characters as JSON", JSON__.Length);
             document.Add("Scorpion_Data", BsonArray);
             collection.InsertOneAsync(document);
-
             Console.WriteLine("Successfully inserted retrieved JSON into " + database + "." + collection);
             return;
         }
