@@ -64,7 +64,8 @@ namespace Scorpion_MDB
 
         private async Task<string> JSON_postAsync_auth(string URL, string USER, string TOKEN, string DATE)
         {
-            var client = new RestClient(URL);
+            //Always put ? , make sure php errors are suppressed
+            var client = new RestClient(check_POSTURL(URL));
             var request = new RestRequest("", Method.POST);
 
             request.AddParameter("Authorization", TOKEN);
@@ -75,12 +76,20 @@ namespace Scorpion_MDB
             request.RequestFormat = DataFormat.Xml;
 
             string response = await client.PostAsync<string>(request, CancellationToken.None);
+            Console.WriteLine("Response: {0}", response);
             return response;
         }
         //Convert
         public JArray jsontoarray(ref string JSON)
         {
             return JArray.Parse(JSON);
+        }
+
+        public string check_POSTURL(string URL)
+        {
+            if (!URL.EndsWith("?", StringComparison.CurrentCulture))
+                return URL.Insert(URL.Length, "?");
+            return URL;
         }
     }
 }

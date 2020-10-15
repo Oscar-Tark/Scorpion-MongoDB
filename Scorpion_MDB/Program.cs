@@ -36,7 +36,8 @@ namespace Scorpion_MDB
             //function::mongocommand
             Console.ForegroundColor = ConsoleColor.White;
             string[] command_vars = split_command(ref command);
-            scmdb.do_mongo(ref command_vars);
+            scmdb.scorpion(command_vars);
+            //scmdb.do_mongo(ref command_vars);
         }
 
         static string[] unwanted = { "::", "*" };

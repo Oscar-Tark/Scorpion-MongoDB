@@ -27,8 +27,21 @@ namespace Scorpion_MDB
             return;
         }
 
-        public void do_mongo(ref string[] command)
+        public void scorpion(object Scorp_Line)
         {
+            try
+            {
+                Thread ths = new Thread(new ParameterizedThreadStart(do_mongo));
+                ths.IsBackground = true;
+                ths.Start(Scorp_Line);
+            }
+            catch { Console.WriteLine("FATAL: COULD NOT START ENGINE THREAD"); }
+            return;
+        }
+
+        public void do_mongo(object exec)
+        {
+            string[] command = (string[])exec;
             Console.ForegroundColor = ConsoleColor.Yellow;
             try
             {
