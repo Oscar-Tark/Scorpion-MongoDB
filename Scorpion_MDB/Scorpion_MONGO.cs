@@ -41,7 +41,7 @@ namespace Scorpion_MDB
 
         public void do_mongo(object exec)
         {
-            string[] command = (string[])exec;
+            string[] command = (string[])Do_on.split_command(ref exec);
             Console.ForegroundColor = ConsoleColor.Yellow;
             try
             {

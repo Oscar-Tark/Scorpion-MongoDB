@@ -7,6 +7,7 @@ namespace Scorpion_MDB
         public static void Main(string[] args)
         {
             Scorpion sc = new Scorpion();
+            return;
         }
     }
 
@@ -19,10 +20,10 @@ namespace Scorpion_MDB
         {
             //Start TCP
             write_cui("Scorpion MONGODB hub v0.1b 2020+ <Oscar Arjun Singh Tark>");
-            write_cui("Please enter a valid IP address to bind to (PORT IS HARD CODED TO 8554):");
+            write_cui("Please enter a valid IP address to bind to and a valid PORT:");
             try
             {
-                tcp = new Scorpion_TCP(Console.ReadLine(), 8554, this);
+                tcp = new Scorpion_TCP(Console.ReadLine(), Convert.ToInt32(Console.ReadLine()), this);
                 write_network("Scorpion MONGODB hub v0.1b 2020+ <Oscar Arjun Singh Tark>: Started successfully on PORT 8554");
             }
             catch(Exception erty) { write_error("Unable to establish a network server. ERROR: " + erty.Message); }
@@ -35,15 +36,17 @@ namespace Scorpion_MDB
         {
             //function::mongocommand
             Console.ForegroundColor = ConsoleColor.White;
-            string[] command_vars = split_command(ref command);
-            scmdb.scorpion(command_vars);
-            //scmdb.do_mongo(ref command_vars);
+            //string[] command_vars = split_command(ref command);
+            //scmdb.do_mongo(command_vars);
+            //return;
+            scmdb.scorpion(command);
+            return;
         }
 
         static string[] unwanted = { "::", "*" };
-        public static string[] split_command(ref string command)
+        public string[] split_command(ref object command)
         {
-            return command.Replace("\n", "").Replace(" ", "").Replace(",", "").Split(unwanted, StringSplitOptions.RemoveEmptyEntries);
+            return ((string)command).Replace("\n", "").Replace(" ", "").Replace(",", "").Split(unwanted, StringSplitOptions.RemoveEmptyEntries);
         }
 
         public void write_success(string STR_)
