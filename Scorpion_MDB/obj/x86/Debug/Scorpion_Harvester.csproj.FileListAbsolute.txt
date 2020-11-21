@@ -122,3 +122,6 @@
 /home/ferret/GIT/Scorpion-MongoDB/Scorpion_MDB/obj/x86/Debug/Scorpion_MDB.exe
 /home/ferret/GIT/Scorpion-MongoDB/Scorpion_MDB/obj/x86/Debug/Scorpion_MDB.pdb
 /home/ferret/GIT/Scorpion-MongoDB/Scorpion_MDB/obj/x86/Debug/Scorpion_Harvester.csprojAssemblyReference.cache
+/home/ferret/GIT/Scorpion-MongoDB/Scorpion_MDB/bin/Debug/Cauldron.Cryptography.dll
+/home/ferret/GIT/Scorpion-MongoDB/Scorpion_MDB/bin/Debug/Cauldron.Randomizer.dll
+/home/ferret/GIT/Scorpion-MongoDB/Scorpion_MDB/bin/Debug/Scorpion_RSA.dll

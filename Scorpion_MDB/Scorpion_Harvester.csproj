@@ -95,6 +95,15 @@
       <HintPath>..\packages\RestSharp.106.11.4\lib\net452\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="Cauldron.Cryptography">
+      <HintPath>bin\Debug\Scorpion_based_libs\Cauldron.Cryptography.dll</HintPath>
+    </Reference>
+    <Reference Include="Cauldron.Randomizer">
+      <HintPath>bin\Debug\Scorpion_based_libs\Cauldron.Randomizer.dll</HintPath>
+    </Reference>
+    <Reference Include="Scorpion_RSA">
+      <HintPath>bin\Debug\Scorpion_based_libs\Scorpion_RSA.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />

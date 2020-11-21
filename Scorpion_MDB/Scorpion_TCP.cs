@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Net;
+using System.Security;
+using System.Text;
 using SimpleTCP;
 
 namespace Scorpion_MDB
@@ -9,6 +11,8 @@ namespace Scorpion_MDB
         SimpleTcpServer tcp = new SimpleTcpServer();
         SimpleTcpClient tcp_cl = new SimpleTcpClient();
         Scorpion do_on;
+        private static readonly string rsa_private_key = "/home/" + Environment.UserName + "/.scorpionharvester/rsa/keys/private";
+        private static readonly string rsa_public_key = "/home/" + Environment.UserName + "/.scorpionharvester/rsa/keys/public";
 
         public Scorpion_TCP(string url, int port, Scorpion fm1)
         {
@@ -22,13 +26,16 @@ namespace Scorpion_MDB
         {
             tcp_cl.Connect(url, port);
             tcp_cl.Delimiter = 0x13;
+            tcp_cl.StringEncoder = Encoding.UTF8;
             tcp_cl.DataReceived += Tcp_Cl_DataReceived;
             return tcp_cl.TcpClient.Connected;
         }
 
         public void client_broadcast(string message)
         {
-            tcp_cl.WriteLine("output::{&var}{&quot}" + message + "{&quot}");
+            message = "output::{&var}{&quot}" + message + "{&quot}";
+            byte[] data = Scorpion_RSA.Scorpion_RSA.encrypt_data(message, rsa_public_key);
+            tcp_cl.Write(data);
             return;
         }
 
@@ -37,6 +44,11 @@ namespace Scorpion_MDB
             IPEndPoint ipep = (IPEndPoint)e.TcpClient.Client.RemoteEndPoint;
             IPAddress ipa = ipep.Address;
             Console.ForegroundColor = ConsoleColor.Blue;
+
+            SecureString key = Scorpion_RSA.Scorpion_RSA.get_private_key_file(rsa_private_key);
+            byte[] data = Scorpion_RSA.Scorpion_RSA.decrypt_data(e.Data, key);
+            string s_data = To_String(data);
+
             EngineFunctions ef__ = new EngineFunctions();
             string command = ef__.replace_fakes(ef__.replace_telnet(e.MessageString));
             Console.WriteLine("[NETWORK:{1}] {0}", command.TrimEnd(new char[] { Convert.ToChar(0x13) }), ipa);
@@ -44,35 +56,9 @@ namespace Scorpion_MDB
             return;
         }
 
-        //Depreciated. Only a client will be used now
-        /*public bool start_server(ref int port)
+        public string To_String(byte[] byt)
         {
-            tcp.Start(port, false);
-            tcp.ClientConnected += Tcp_ClientConnected;
-            tcp.DataReceived += Tcp_DataReceived;
-            return tcp.IsStarted;
+            return Encoding.Default.GetString(byt);
         }
-
-        public bool stop_server()
-        {
-            tcp.Stop();
-            return tcp.IsStarted;
-        }
-
-        void Tcp_ClientConnected(object sender, System.Net.Sockets.TcpClient e)
-        {
-            //Executes mongo
-            Console.WriteLine("Client Connected {0}");
-            return;
-        }
-
-        void Tcp_DataReceived(object sender, Message e)
-        {
-            IPEndPoint ipep = (IPEndPoint)e.TcpClient.Client.RemoteEndPoint;
-            IPAddress ipa = ipep.Address;
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("Got string: {0} from {1}", e.MessageString, ipa);
-            do_on.execute_command(e.MessageString);
-        }*/
     }
 }
